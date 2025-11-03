@@ -1,22 +1,32 @@
 package service;
 
+import memory.OrderRepository;
 import model.*;
 import util.ConsoleIO;
 import util.Formatter;
 import static resources.Messages.*;
 import static resources.Constants.*;
 
+import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 
 public class OrderService {
+
     private ItemFactory itemFactory;
 
     private Order order;
 
+    private OrderRepository orderRepository;
+
+    public OrderService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
     public void orderloop() {
         do {
             order = new Order();
+            orderRepository.insert(order);
             menuloop();
         } while (placeAnotherOrder());
     }
@@ -81,6 +91,7 @@ public class OrderService {
         int price = ConsoleIO.requestIntInput(ORDER_PRICE_PROMPT);
         int quantity = ConsoleIO.requestIntInput(ORDER_QUANTITY_PROMPT);
         order.addSelectedItem(itemFactory.createProduct(name, price, quantity));
+        orderRepository.update(order);
     }
 
     private void orderService() {
@@ -88,10 +99,13 @@ public class OrderService {
         int persons = ConsoleIO.requestIntInput(SERVICE_PERSONS_PROMPT);
         int hours = ConsoleIO.requestIntInput(SERVICE_HOURS_PROMPT);
         order.addSelectedItem(itemFactory.createService(name, persons, hours));
+        orderRepository.update(order);
     }
 
     private void finishOrder() {
         order.setCheckoutTimestamp(LocalDateTime.now());
+
+        orderRepository.update(order);
 
         for (Item item : order.getSelectedItems()) {
             ConsoleIO.println(item + " = " + Formatter.formatPrice(item.getPrice()));
@@ -99,6 +113,10 @@ public class OrderService {
 
         int sum = order.getLumpSum();
         ConsoleIO.println(SUM_LABEL + Formatter.formatPrice(sum));
+
+
+        //for test purposes
+        //orderRepository.findAll().forEach( v -> v.getSelectedItems().forEach(item -> ConsoleIO.println(item + " = " + Formatter.formatPrice(item.getPrice()))));
     }
 
     private int parseToOption(String input) {
