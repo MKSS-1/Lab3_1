@@ -144,8 +144,12 @@ public class OrderUI extends JFrame {
             inputPanel.add(fields[i], gbc);
         }
 
-        JButton okButton = new JButton("OK");
-        JButton cancelButton = new JButton("Cancel");
+        JButton okButton = createButton("OK");
+        JButton cancelButton = createButton("Cancel");
+
+        Dimension buttonSize = new Dimension(180, 35);
+        okButton.setPreferredSize(buttonSize);
+        cancelButton.setPreferredSize(buttonSize);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(okButton);
