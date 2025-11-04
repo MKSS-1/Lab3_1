@@ -2,6 +2,7 @@ package service;
 
 import memory.OrderRepository;
 import model.*;
+import resources.Constants;
 import util.ConsoleIO;
 import util.Formatter;
 import static resources.Messages.*;
@@ -124,10 +125,10 @@ public class OrderService {
         StringBuilder sb = new StringBuilder();
         for (Item item : order.getSelectedItems()) {
             // einfach Preis aus Item verwenden, er ist schon korrekt berechnet
-            sb.append(item).append(" = ").append(Formatter.formatPrice(item.getPrice())).append("\n");
+            sb.append(item).append(Constants.EQUALS).append(Formatter.formatPrice(item.getPrice())).append("\n");
         }
 
-        sb.append("\nTotal sum: ")
+        sb.append(Constants.TOTAL_SUM)
                 .append(Formatter.formatPrice(order.getLumpSum()))
                 .append("\n");
 

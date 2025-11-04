@@ -3,6 +3,7 @@ package ui;
 import memory.MemoryOrderRepository;
 import memory.OrderRepository;
 import model.*;
+import resources.Constants;
 import service.OrderService;
 
 import javax.swing.*;
@@ -23,15 +24,15 @@ public class OrderUI extends JFrame {
     }
 
     private void initUI() {
-        setTitle("Order System");
+        setTitle(Constants.WINDOW_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setLayout(new BorderLayout(10, 10));
+        setLayout(new BorderLayout(Constants.DIALOG_MARGIN, Constants.DIALOG_VERTICAL_GAP));
 
-        JButton btnNewOrder = createButton("Start New Order");
-        JButton btnAddProduct = createButton("Add Product");
-        JButton btnAddService = createButton("Add Service");
-        JButton btnFinish = createButton("Complete Order");
+        JButton btnNewOrder = createButton(Constants.NEW_ORDER_BUTTON);
+        JButton btnAddProduct = createButton(Constants.ADD_PRODUCT_BUTTON);
+        JButton btnAddService = createButton(Constants.ADD_SERVICE_BUTTON);
+        JButton btnFinish = createButton(Constants.FINISH_BUTTON);
 
         btnAddProduct.setEnabled(false);
         btnAddService.setEnabled(false);
@@ -41,11 +42,11 @@ public class OrderUI extends JFrame {
         outputArea.setEditable(false);
         outputArea.setLineWrap(true);
         outputArea.setWrapStyleWord(true);
-        outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        outputArea.setFont(new Font(Constants.FONT_NAME, Constants.FONT_STYLE, Constants.FONT_SIZE));
         JScrollPane scrollPane = new JScrollPane(outputArea);
 
         JPanel buttonPanel = new JPanel();
-        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER, 5, 20);
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER, Constants.FLOW_HORIZONTAL_GAP, Constants.FLOW_VERTICAL_GAP);
         buttonPanel.setLayout(flowLayout);
         buttonPanel.add(btnNewOrder);
         buttonPanel.add(btnAddProduct);
@@ -74,7 +75,7 @@ public class OrderUI extends JFrame {
 
         btnNewOrder.addActionListener(e -> {
             orderService.startNewOrder();
-            outputArea.setText("New order started!\n");
+            outputArea.setText(Constants.MSG_NEW_ORDER_STARTED);
 
             btnAddProduct.setEnabled(true);
             btnAddService.setEnabled(true);
@@ -87,7 +88,7 @@ public class OrderUI extends JFrame {
 
         btnFinish.addActionListener(e -> {
             String summary = orderService.finishOrderAndReturnSummary();
-            outputArea.append("\n--- Order completed ---\n" + summary + "\n");
+            outputArea.append(Constants.MSG_ORDER_COMPLETED + summary + "\n");
 
             btnAddProduct.setEnabled(false);
             btnAddService.setEnabled(false);
@@ -97,7 +98,7 @@ public class OrderUI extends JFrame {
 
         pack();
         Dimension size = getSize();
-        size.height = 500;
+        size.height = Constants.WINDOW_HEIGHT;
         setSize(size);
 
         setLocationRelativeTo(null);
@@ -106,31 +107,31 @@ public class OrderUI extends JFrame {
 
     private JButton createButton(String text) {
         JButton btn = new JButton(text);
-        btn.setPreferredSize(new Dimension(180, 35));
-        btn.setBackground(new Color(70, 130, 180));
-        btn.setForeground(Color.WHITE);
+        btn.setPreferredSize(new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT));
+        btn.setBackground(Constants.BUTTON_BACKGROUND);
+        btn.setForeground(Constants.BUTTON_FOREGROUND);
         btn.setFocusPainted(false);
         return btn;
     }
 
     private void showAddItemDialog(boolean isProduct, JTextArea outputArea) {
-        JDialog dialog = new JDialog(this, isProduct ? "Add Product" : "Add Service", true);
+        JDialog dialog = new JDialog(this, isProduct ? Constants.PRODUCT_DIALOG_TITLE : Constants.SERVICE_DIALOG_TITLE, true);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        JTextField nameField = new JTextField(15);
-        JTextField field2 = new JTextField(15);
-        JTextField field3 = new JTextField(15);
+        JTextField nameField = new JTextField(Constants.DIALOG_TEXTFIELD_COLUMNS);
+        JTextField field2 = new JTextField(Constants.DIALOG_TEXTFIELD_COLUMNS);
+        JTextField field3 = new JTextField(Constants.DIALOG_TEXTFIELD_COLUMNS);
         JLabel hintLabel = new JLabel();
-        hintLabel.setForeground(Color.RED);
+        hintLabel.setForeground(Constants.DIALOG_HINT_COLOR);
 
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 4, 4, 4);
+        gbc.insets = new Insets(Constants.DIALOG_INSET, Constants.DIALOG_INSET, Constants.DIALOG_INSET, Constants.DIALOG_INSET);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         String[] labels = isProduct
-                ? new String[]{"Product Name:", "Price (cents):", "Quantity:"}
-                : new String[]{"Service Name:", "Number of People:", "Hours:"};
+                ? new String[]{Constants.PRODUCT_NAME_LABEL, Constants.PRODUCT_PRICE_LABEL, Constants.PRODUCT_QUANTITY_LABEL}
+                : new String[]{Constants.SERVICE_NAME_LABEL, Constants.SERVICE_PERSONS_LABEL, Constants.SERVICE_HOURS_LABEL};
         JTextField[] fields = new JTextField[]{nameField, field2, field3};
 
         for (int i = 0; i < labels.length; i++) {
@@ -144,10 +145,10 @@ public class OrderUI extends JFrame {
             inputPanel.add(fields[i], gbc);
         }
 
-        JButton okButton = createButton("OK");
-        JButton cancelButton = createButton("Cancel");
+        JButton okButton = createButton(Constants.OK_BUTTON);
+        JButton cancelButton = createButton(Constants.CANCEL_BUTTON);
 
-        Dimension buttonSize = new Dimension(180, 35);
+        Dimension buttonSize = new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
         okButton.setPreferredSize(buttonSize);
         cancelButton.setPreferredSize(buttonSize);
 
@@ -155,11 +156,11 @@ public class OrderUI extends JFrame {
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
 
-        JPanel mainPanel = new JPanel(new BorderLayout(0, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout(Constants.PANEL_HORIZONTAL_GAP, Constants.PANEL_VERTICAL_GAP));
         mainPanel.add(hintLabel, BorderLayout.NORTH);
         mainPanel.add(inputPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(Constants.PANEL_BORDER_SPACE, Constants.PANEL_BORDER_SPACE, Constants.PANEL_BORDER_SPACE, Constants.PANEL_BORDER_SPACE));
 
         dialog.getContentPane().add(mainPanel);
         dialog.pack();
@@ -176,9 +177,9 @@ public class OrderUI extends JFrame {
             String text3 = field3.getText().trim();
 
             if (name.isEmpty()) {
-                nameField.setBackground(new Color(255, 180, 180));
+                nameField.setBackground(Constants.DIALOG_ERROR_COLOR);
                 valid = false;
-                sb.append("⦾ ").append(isProduct ? "Product name" : "Service name").append(" cannot be empty.<br>");
+                sb.append(Constants.BULLETPOINT).append(isProduct ? Constants.HINT_PRODUCT_NAME : Constants.HINT_SERVICE_NAME).append(Constants.ERROR_EMPTY_NAME);
             }
 
             int val2 = 0, val3 = 0;
@@ -186,18 +187,18 @@ public class OrderUI extends JFrame {
                 val2 = Integer.parseInt(text2);
                 if (val2 <= 0) throw new NumberFormatException();
             } catch (NumberFormatException ex) {
-                field2.setBackground(new Color(255, 180, 180));
+                field2.setBackground(Constants.DIALOG_ERROR_COLOR);
                 valid = false;
-                sb.append("⦾ ").append(isProduct ? "Price" : "Number of people").append(" must be positive.<br>");
+                sb.append(Constants.BULLETPOINT).append(isProduct ? Constants.HINT_PRICE : Constants.HINT_PEOPLE).append(Constants.ERROR_NOT_POSITIVE);
             }
 
             try {
                 val3 = Integer.parseInt(text3);
                 if (val3 <= 0) throw new NumberFormatException();
             } catch (NumberFormatException ex) {
-                field3.setBackground(new Color(255, 180, 180));
+                field3.setBackground(Constants.DIALOG_ERROR_COLOR);
                 valid = false;
-                sb.append("⦾ ").append(isProduct ? "Quantity" : "Hours").append(" must be positive.<br>");
+                sb.append(Constants.BULLETPOINT).append(isProduct ? Constants.HINT_QUANTITY : Constants.HINT_HOURS).append(Constants.ERROR_NOT_POSITIVE);
             }
 
             sb.append("</html>");
@@ -205,10 +206,10 @@ public class OrderUI extends JFrame {
             if (valid) {
                 if (isProduct) {
                     orderService.addProduct(name, val2, val3);
-                    outputArea.append("Product added: " + val3 + " × " + name + " (" + val2 + " cents each)\n");
+                    outputArea.append(String.format(Constants.MSG_PRODUCT_ADDED, val3, name, val2));
                 } else {
                     orderService.addService(name, val2, val3);
-                    outputArea.append("Service added: " + val2 + " people × " + val3 + "h " + name + "\n");
+                    outputArea.append(String.format(Constants.MSG_SERVICE_ADDED, name, val2, val3));
                 }
                 dialog.dispose();
             } else {
