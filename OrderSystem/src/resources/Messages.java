@@ -22,4 +22,46 @@ public interface Messages {
     String PERSONS = " persons for ";
     // output
     String SUM_LABEL = "Sum: ";
+
+    String WINDOW_TITLE = "Order System";
+    // Labels
+    String NEW_ORDER_BUTTON = "Start New Order";
+    String ADD_PRODUCT_BUTTON = "Add Product";
+    String ADD_SERVICE_BUTTON = "Add Service";
+    String FINISH_BUTTON = "Complete Order";
+
+    String OK_BUTTON = "OK";
+    String CANCEL_BUTTON = "Cancel";
+
+    String PRODUCT_DIALOG_TITLE = "Add Product";
+    String SERVICE_DIALOG_TITLE = "Add Service";
+
+    String PRODUCT_NAME_LABEL = "Product Name:";
+    String PRODUCT_PRICE_LABEL = "Price (cents):";
+    String PRODUCT_QUANTITY_LABEL = "Quantity:";
+
+    String SERVICE_NAME_LABEL = "Service Name:";
+    String SERVICE_PERSONS_LABEL = "Number of People:";
+    String SERVICE_HOURS_LABEL = "Hours:";
+
+    // Messages
+    String MSG_NEW_ORDER_STARTED = "New order started!\n";
+    String MSG_ORDER_COMPLETED = "--- Order completed ---\n";
+    String MSG_PRODUCT_ADDED = "Product added: %s × %s (%s cents each)\n";
+    String MSG_SERVICE_ADDED = "Service added: %s people × %sh %s\n";
+
+    String BULLETPOINT = "⦾ ";
+
+    String HINT_PRODUCT_NAME = "Product name";
+    String HINT_SERVICE_NAME = "Service name";
+    String HINT_QUANTITY = "Quantity";
+    String HINT_PRICE = "Price";
+    String HINT_HOURS = "Hours";
+    String HINT_PEOPLE = "Number of people";
+
+    String ERROR_EMPTY_NAME = " cannot be empty.<br>";
+    String ERROR_NOT_POSITIVE = " must be positive.<br>";
+
+    String TOTAL_SUM = "\nTotal sum: ";
+    String EQUALS = " = ";
 }

@@ -22,7 +22,7 @@ public class OrderSystemMain {
             cli.orderloop();
         } else if (Objects.equals(args[0], "gui")) {
             GUI gui = new GUI(orderService);
-            gui.run();
+            gui.initUI();
         }
 	}
 }

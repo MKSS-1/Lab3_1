@@ -78,7 +78,7 @@ public class CLI {
     }
 
     private void finishOrderSummary() {
-        ConsoleIO.println(String.valueOf(orderDTO.getCheckoutTimestamp()));
+        ConsoleIO.println(orderDTO.formatCheckoutTimestamp(orderDTO.getCheckoutTimestamp()));
         for (Item item : orderDTO.getSelectedItems()) {
             ConsoleIO.println(item + " = " + orderDTO.formatPrice(item.getPrice()));
         }

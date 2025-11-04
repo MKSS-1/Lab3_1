@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,5 +43,10 @@ public class OrderDTO {
             sum += item.getPrice();
         }
         return sum;
+    }
+
+    public String formatCheckoutTimestamp(LocalDateTime checkoutTimestamp) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        return checkoutTimestamp.format(dateTimeFormatter);
     }
 }
