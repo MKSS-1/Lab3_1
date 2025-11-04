@@ -22,11 +22,19 @@ public class MemoryOrderRepository implements OrderRepository {
 
     @Override
     public List<Order> findAll() {
-       return new ArrayList<>(orders);
+        return clone(orders);
     }
 
     @Override
     public void deleteAll() {
         orders.clear();
+    }
+
+    private List<Order> clone(List<Order> orders) {
+        List<Order> orderList = new ArrayList<>();
+        for (Order order : orders) {
+            orderList.add(new Order(order));
+        }
+        return orderList;
     }
 }
