@@ -1,23 +1,27 @@
 package memory;
 
 import model.Order;
+import model.OrderDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MemoryOrderRepository implements OrderRepository {
 
     private final List<Order> orders = new ArrayList<>();
 
     @Override
-    public void insert(Order order) {
+    public Order insert(Order order) {
         orders.add(order);
+        return new Order(order);
     }
 
     @Override
-    public void update(Order order) {
+    public Order update(Order order) {
         int i = orders.indexOf(order);
         orders.set(i, order);
+        return new Order(orders.get(i));
     }
 
     @Override

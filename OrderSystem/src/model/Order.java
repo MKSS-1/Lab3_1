@@ -1,20 +1,28 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
-import static resources.Constants.FORMATTER_CENT_EURO;
-import static resources.Constants.FORMATTER_SMALLER_TEN;
-import static resources.Messages.CURRENCY;
+import java.util.*;
 
 public class Order {
+    private UUID id;
     private List<Item> selectedItems;
     private LocalDateTime checkoutTimestamp;
 
     public Order() {
         this.selectedItems = new ArrayList<>();
+        this.id = UUID.randomUUID();
+    }
+
+    public Order(Order order) {
+        this.id = order.id;
+        this.selectedItems = order.selectedItems;
+        this.checkoutTimestamp = order.checkoutTimestamp;
+    }
+
+    public Order(OrderDTO orderDTO) {
+        this.id = orderDTO.getId();
+        this.selectedItems = orderDTO.getSelectedItems();
+        this.checkoutTimestamp = orderDTO.getCheckoutTimestamp();
     }
 
     public void setCheckoutTimestamp(LocalDateTime checkoutTimestamp) {
@@ -33,25 +41,23 @@ public class Order {
         this.selectedItems.add(selectedItem);
     }
 
-    public int getLumpSum() {
-        int sum = 0;
-        for(Item item: this.selectedItems) {
-            sum += item.getPrice();
-        }
-        return sum;
-    }
-
-    public Order(Order order) {
-        this.selectedItems = order.selectedItems;
-        this.checkoutTimestamp = order.checkoutTimestamp;
+    public UUID getId() {
+        return id;
     }
 
     public void sortItemsByPriceAsc() {
         selectedItems.sort(Comparator.comparingInt(Item::getPrice));
     }
 
-    public String formatPrice(int priceInCent) {
-        return (priceInCent / FORMATTER_CENT_EURO) + "." + (priceInCent % FORMATTER_CENT_EURO < FORMATTER_SMALLER_TEN ? "0" : "")
-                + priceInCent % FORMATTER_CENT_EURO + CURRENCY;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id == order.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

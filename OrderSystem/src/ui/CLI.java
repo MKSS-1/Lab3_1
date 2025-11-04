@@ -1,9 +1,6 @@
 package ui;
 
-import model.Item;
-import model.ItemFactory;
-import model.Order;
-import model.Product;
+import model.*;
 import service.OrderService;
 import util.ConsoleIO;
 
@@ -16,7 +13,7 @@ import static resources.Messages.MENU_ORDER_SERVICE_TEXT;
 
 public class CLI {
     private OrderService orderService;
-    private Order order;
+    private OrderDTO orderDTO;
 
     public CLI(OrderService orderService) {
         this.orderService = orderService;
@@ -31,7 +28,7 @@ public class CLI {
 
     public void orderloop() {
         do {
-            order = orderService.createOrder();
+            orderDTO = orderService.createOrder();
             menuloop();
         } while (placeAnotherOrder());
     }
@@ -61,12 +58,12 @@ public class CLI {
             switch (option) {
                 case MENU_FINISH_OPTION: break;
                 case MENU_ORDER_PRODUCT_OPTION:
-                    order = orderService.orderProduct(order, ConsoleIO.requestStringInput(ORDER_NAME_PROMPT),
+                    orderDTO = orderService.orderProduct(orderDTO, ConsoleIO.requestStringInput(ORDER_NAME_PROMPT),
                             ConsoleIO.requestIntInput(ORDER_PRICE_PROMPT),
                             ConsoleIO.requestIntInput(ORDER_QUANTITY_PROMPT));
                     break;
                 case MENU_ORDER_SERVICE_OPTION:
-                    order = orderService.orderService(order, ConsoleIO.requestStringInput(SERVICE_TYPE_PROMPT),
+                    orderDTO = orderService.orderService(orderDTO, ConsoleIO.requestStringInput(SERVICE_TYPE_PROMPT),
                             ConsoleIO.requestIntInput(SERVICE_PERSONS_PROMPT),
                             ConsoleIO.requestIntInput(SERVICE_HOURS_PROMPT));
                     break;
@@ -76,18 +73,18 @@ public class CLI {
             }
         } while (option != MENU_FINISH_OPTION);
 
-        order = orderService.finishOrder(order);
+        orderDTO = orderService.finishOrder(orderDTO);
         finishOrderSummary();
     }
 
     private void finishOrderSummary() {
-        ConsoleIO.println(String.valueOf(order.getCheckoutTimestamp()));
-        for (Item item : order.getSelectedItems()) {
-            ConsoleIO.println(item + " = " + order.formatPrice(item.getPrice()));
+        ConsoleIO.println(String.valueOf(orderDTO.getCheckoutTimestamp()));
+        for (Item item : orderDTO.getSelectedItems()) {
+            ConsoleIO.println(item + " = " + orderDTO.formatPrice(item.getPrice()));
         }
 
-        int sum = order.getLumpSum();
-        ConsoleIO.println(SUM_LABEL + order.formatPrice(sum));
+        int sum = orderDTO.getLumpSum();
+        ConsoleIO.println(SUM_LABEL + orderDTO.formatPrice(sum));
     }
 
     private int parseToOption(String input) {

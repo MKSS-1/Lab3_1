@@ -18,28 +18,27 @@ public class OrderService {
         this.itemFactory = itemFactory;
     }
 
-    public Order createOrder() {
+    public OrderDTO createOrder() {
         Order order = new Order();
-        orderRepository.insert(order);
-        return order;
+        return new OrderDTO(orderRepository.insert(order));
     }
 
-    public Order orderProduct(Order order, String name, int price, int quantity) {
+    public OrderDTO orderProduct(OrderDTO orderDTO, String name, int price, int quantity) {
+        Order order = new Order(orderDTO);
         order.addSelectedItem(itemFactory.createProduct(name, price, quantity));
-        orderRepository.update(order);
-        return order;
+        return new OrderDTO(orderRepository.update(order));
     }
 
-    public Order orderService(Order order, String name, int persons, int hours) {
+    public OrderDTO orderService(OrderDTO orderDTO, String name, int persons, int hours) {
+        Order order = new Order(orderDTO);
         order.addSelectedItem(itemFactory.createService(name, persons, hours));
-        orderRepository.update(order);
-        return order;
+        return new OrderDTO(orderRepository.update(order));
     }
 
-    public Order finishOrder(Order order) {
+    public OrderDTO finishOrder(OrderDTO orderDTO) {
+        Order order = new Order(orderDTO);
         order.setCheckoutTimestamp(LocalDateTime.now());
         order.sortItemsByPriceAsc();
-        orderRepository.update(order);
-        return order;
+        return new OrderDTO(orderRepository.update(order));
     }
 }
