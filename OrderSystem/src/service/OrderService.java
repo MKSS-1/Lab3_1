@@ -127,13 +127,12 @@ public class OrderService {
             sb.append(item).append(" = ").append(Formatter.formatPrice(item.getPrice())).append("\n");
         }
 
-        sb.append("\nGesamtsumme: ")
+        sb.append("\nTotal sum: ")
                 .append(Formatter.formatPrice(order.getLumpSum()))
                 .append("\n");
 
         return sb.toString();
     }
-
 
     private void finishOrder() {
         order.setCheckoutTimestamp(LocalDateTime.now());
