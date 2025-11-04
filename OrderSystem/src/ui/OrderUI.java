@@ -99,6 +99,10 @@ public class OrderUI extends JFrame {
         });
 
         pack();
+        Dimension size = getSize();
+        size.height = 500;
+        setSize(size);
+
         setLocationRelativeTo(null);
         setVisible(true);
     }
