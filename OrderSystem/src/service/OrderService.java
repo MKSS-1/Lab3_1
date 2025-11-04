@@ -102,6 +102,39 @@ public class OrderService {
         orderRepository.update(order);
     }
 
+    public void startNewOrder() {
+        order = new Order();
+        orderRepository.insert(order);
+    }
+
+    public void addProduct(String name, int price, int quantity) {
+        order.addSelectedItem(itemFactory.createProduct(name, price, quantity));
+        orderRepository.update(order);
+    }
+
+    public void addService(String name, int persons, int hours) {
+        order.addSelectedItem(itemFactory.createService(name, persons, hours));
+        orderRepository.update(order);
+    }
+
+    public String finishOrderAndReturnSummary() {
+        order.setCheckoutTimestamp(LocalDateTime.now());
+        orderRepository.update(order);
+
+        StringBuilder sb = new StringBuilder();
+        for (Item item : order.getSelectedItems()) {
+            // einfach Preis aus Item verwenden, er ist schon korrekt berechnet
+            sb.append(item).append(" = ").append(Formatter.formatPrice(item.getPrice())).append("\n");
+        }
+
+        sb.append("\nGesamtsumme: ")
+                .append(Formatter.formatPrice(order.getLumpSum()))
+                .append("\n");
+
+        return sb.toString();
+    }
+
+
     private void finishOrder() {
         order.setCheckoutTimestamp(LocalDateTime.now());
 

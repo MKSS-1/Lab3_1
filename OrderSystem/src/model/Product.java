@@ -19,4 +19,8 @@ public class Product extends Item{
 	public String toString() {
 		return quantity + " * " + getName();
 	}
+
+    public int getQuantity() {
+        return quantity;
+    }
 }
