@@ -1,14 +1,14 @@
 package resources;
 
 public interface Messages {
-    // menu text
+    // Menu text
     String MENU_PROMPT = "Your choice?";
     String MENU_FINISH_TEXT = "(0) Finish order";
     String MENU_ORDER_PRODUCT_TEXT = "(1) Order product";
     String MENU_ORDER_SERVICE_TEXT = "(2) Order service";
     String INVALID_INPUT = "invalid";
 
-    // order process
+    // Order process
     String ORDER_AGAIN_PROMPT = "Do you want to place another order? (1) Yes/(0) No";
     String ORDER_NAME_PROMPT = "Name: ";
     String ORDER_PRICE_PROMPT = "Unit price (in cents): ";
@@ -20,10 +20,12 @@ public interface Messages {
     String CURRENCY = " EUR";
     String HOURS = "h of ";
     String PERSONS = " persons for ";
-    // output
+
+    // Output
     String SUM_LABEL = "Sum: ";
 
     String WINDOW_TITLE = "Order System";
+
     // Labels
     String NEW_ORDER_BUTTON = "Start New Order";
     String ADD_PRODUCT_BUTTON = "Add Product";
@@ -50,7 +52,7 @@ public interface Messages {
     String MSG_PRODUCT_ADDED = "Product added: %s × %s (%s cents each)\n";
     String MSG_SERVICE_ADDED = "Service added: %s people × %sh %s\n";
 
-    String BULLETPOINT = "⦾ ";
+    String BULLETPOINT = "• ";
 
     String HINT_PRODUCT_NAME = "Product name";
     String HINT_SERVICE_NAME = "Service name";
@@ -62,6 +64,5 @@ public interface Messages {
     String ERROR_EMPTY_NAME = " cannot be empty.<br>";
     String ERROR_NOT_POSITIVE = " must be positive.<br>";
 
-    String TOTAL_SUM = "\nTotal sum: ";
     String EQUALS = " = ";
 }

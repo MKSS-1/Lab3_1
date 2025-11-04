@@ -12,7 +12,7 @@ import static resources.Messages.*;
 import static resources.Messages.MENU_ORDER_SERVICE_TEXT;
 
 public class CLI {
-    private OrderService orderService;
+    private final OrderService orderService;
     private OrderDTO orderDTO;
 
     public CLI(OrderService orderService) {
