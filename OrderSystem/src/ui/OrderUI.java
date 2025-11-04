@@ -7,8 +7,6 @@ import service.OrderService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OrderUI extends JFrame {
 
@@ -30,10 +28,10 @@ public class OrderUI extends JFrame {
 
         setLayout(new BorderLayout(10, 10));
 
-        JButton btnNewOrder = createButton("Neue Bestellung starten");
-        JButton btnAddProduct = createButton("Produkt hinzufügen");
-        JButton btnAddService = createButton("Service hinzufügen");
-        JButton btnFinish = createButton("Bestellung abschließen");
+        JButton btnNewOrder = createButton("Start New Order");
+        JButton btnAddProduct = createButton("Add Product");
+        JButton btnAddService = createButton("Add Service");
+        JButton btnFinish = createButton("Complete Order");
 
         btnAddProduct.setEnabled(false);
         btnAddService.setEnabled(false);
@@ -72,12 +70,11 @@ public class OrderUI extends JFrame {
         });
 
         add(buttonScrollPane, BorderLayout.NORTH);
-
         add(scrollPane, BorderLayout.CENTER);
 
         btnNewOrder.addActionListener(e -> {
             orderService.startNewOrder();
-            outputArea.setText("Neue Bestellung gestartet!\n");
+            outputArea.setText("New order started!\n");
 
             btnAddProduct.setEnabled(true);
             btnAddService.setEnabled(true);
@@ -85,12 +82,12 @@ public class OrderUI extends JFrame {
             btnNewOrder.setEnabled(false);
         });
 
-        btnAddProduct.addActionListener(e -> handleAddItem(true, outputArea));
-        btnAddService.addActionListener(e -> handleAddItem(false, outputArea));
+        btnAddProduct.addActionListener(e -> showAddItemDialog(true, outputArea));
+        btnAddService.addActionListener(e -> showAddItemDialog(false, outputArea));
 
         btnFinish.addActionListener(e -> {
             String summary = orderService.finishOrderAndReturnSummary();
-            outputArea.append("\n--- Bestellung abgeschlossen ---\n" + summary + "\n");
+            outputArea.append("\n--- Order completed ---\n" + summary + "\n");
 
             btnAddProduct.setEnabled(false);
             btnAddService.setEnabled(false);
@@ -116,19 +113,15 @@ public class OrderUI extends JFrame {
         return btn;
     }
 
-    private void handleAddItem(boolean isProduct, JTextArea outputArea) {
-        JTextField nameField = new JTextField();
-        JTextField field2 = new JTextField();
-        JTextField field3 = new JTextField();
+    private void showAddItemDialog(boolean isProduct, JTextArea outputArea) {
+        JDialog dialog = new JDialog(this, isProduct ? "Add Product" : "Add Service", true);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        Dimension fieldSize = new Dimension(120, 25);
-        nameField.setPreferredSize(fieldSize);
-        field2.setPreferredSize(fieldSize);
-        field3.setPreferredSize(fieldSize);
-
+        JTextField nameField = new JTextField(15);
+        JTextField field2 = new JTextField(15);
+        JTextField field3 = new JTextField(15);
         JLabel hintLabel = new JLabel();
         hintLabel.setForeground(Color.RED);
-        hintLabel.setVisible(false);
 
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -136,9 +129,8 @@ public class OrderUI extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         String[] labels = isProduct
-                ? new String[]{"Produktname:", "Preis (in Cent):", "Menge:"}
-                : new String[]{"Servicename:", "Anzahl Personen:", "Stunden:"};
-
+                ? new String[]{"Product Name:", "Price (cents):", "Quantity:"}
+                : new String[]{"Service Name:", "Number of People:", "Hours:"};
         JTextField[] fields = new JTextField[]{nameField, field2, field3};
 
         for (int i = 0; i < labels.length; i++) {
@@ -152,28 +144,29 @@ public class OrderUI extends JFrame {
             inputPanel.add(fields[i], gbc);
         }
 
-        JPanel panel = new JPanel(new BorderLayout(0, 10));
-        panel.add(hintLabel, BorderLayout.NORTH);
-        panel.add(inputPanel, BorderLayout.CENTER);
-        panel.setPreferredSize(new Dimension(400, 150));
+        JButton okButton = new JButton("OK");
+        JButton cancelButton = new JButton("Cancel");
 
-        boolean valid = false;
-        while (!valid) {
-            int result = JOptionPane.showConfirmDialog(
-                    this, panel, isProduct ? "Produkt hinzufügen" : "Service hinzufügen",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
-            );
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
 
-            if (result != JOptionPane.OK_OPTION) return;
+        JPanel mainPanel = new JPanel(new BorderLayout(0, 10));
+        mainPanel.add(hintLabel, BorderLayout.NORTH);
+        mainPanel.add(inputPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-            nameField.setBackground(Color.WHITE);
-            field2.setBackground(Color.WHITE);
-            field3.setBackground(Color.WHITE);
-            hintLabel.setVisible(false);
+        dialog.getContentPane().add(mainPanel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
 
-            valid = true;
-            List<String> errors = new ArrayList<>();
+        okButton.addActionListener(e -> {
+            hintLabel.setText("");
+            for (JTextField f : fields) f.setBackground(Color.WHITE);
 
+            boolean valid = true;
+            StringBuilder sb = new StringBuilder("<html>");
             String name = nameField.getText().trim();
             String text2 = field2.getText().trim();
             String text3 = field3.getText().trim();
@@ -181,7 +174,7 @@ public class OrderUI extends JFrame {
             if (name.isEmpty()) {
                 nameField.setBackground(new Color(255, 180, 180));
                 valid = false;
-                errors.add("⦾ " + (isProduct ? "Produktname" : "Servicename") + " darf nicht leer sein.");
+                sb.append("⦾ ").append(isProduct ? "Product name" : "Service name").append(" cannot be empty.<br>");
             }
 
             int val2 = 0, val3 = 0;
@@ -191,7 +184,7 @@ public class OrderUI extends JFrame {
             } catch (NumberFormatException ex) {
                 field2.setBackground(new Color(255, 180, 180));
                 valid = false;
-                errors.add("⦾ " + (isProduct ? "Preis" : "Personenzahl") + " muss eine positive Zahl sein.");
+                sb.append("⦾ ").append(isProduct ? "Price" : "Number of people").append(" must be positive.<br>");
             }
 
             try {
@@ -200,25 +193,30 @@ public class OrderUI extends JFrame {
             } catch (NumberFormatException ex) {
                 field3.setBackground(new Color(255, 180, 180));
                 valid = false;
-                errors.add("⦾ " + (isProduct ? "Menge" : "Stunden") + " muss eine positive Zahl sein.");
+                sb.append("⦾ ").append(isProduct ? "Quantity" : "Hours").append(" must be positive.<br>");
             }
+
+            sb.append("</html>");
 
             if (valid) {
                 if (isProduct) {
                     orderService.addProduct(name, val2, val3);
-                    outputArea.append("Produkt hinzugefügt: " + val3 + " × " + name + " (" + val2 + " Cent/Stück)\n");
+                    outputArea.append("Product added: " + val3 + " × " + name + " (" + val2 + " cents each)\n");
                 } else {
                     orderService.addService(name, val2, val3);
-                    outputArea.append("Service hinzugefügt: " + val2 + " Pers. × " + val3 + "h " + name + "\n");
+                    outputArea.append("Service added: " + val2 + " people × " + val3 + "h " + name + "\n");
                 }
+                dialog.dispose();
             } else {
-                StringBuilder sb = new StringBuilder("<html>");
-                for (String err : errors) sb.append(err).append("<br>");
-                sb.append("</html>");
                 hintLabel.setText(sb.toString());
-                hintLabel.setVisible(true);
+                dialog.pack();
+                dialog.revalidate();
             }
-        }
+        });
+
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        dialog.setVisible(true);
     }
 
     public static void main(String[] args) {
