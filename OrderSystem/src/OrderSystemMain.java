@@ -9,8 +9,6 @@ import ui.GUI;
 import java.util.Objects;
 
 public class OrderSystemMain {
-    // TODO: Wollen wir besser immer eine Kopie der Order verwenden? Z.B. auch bei orderRepository.insert()? Wieso dort nicht?
-    // Kopie eventuell besser, da dann die CLI / GUI nicht direkt das Objekt aus dem Repository verändert
     static void main(String[] args) {
         OrderRepository orderRepository = new MemoryOrderRepository();
 		OrderService orderService = new OrderService(orderRepository);
