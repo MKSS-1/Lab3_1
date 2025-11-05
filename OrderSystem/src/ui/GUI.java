@@ -83,7 +83,7 @@ public class GUI extends JFrame {
 
         btnFinish.addActionListener(e -> {
             orderDTO = orderService.finishOrder(orderDTO);
-            outputArea.append(Messages.MSG_ORDER_COMPLETED + finishOrderSummary() + "\n");
+            outputArea.append(Messages.MSG_ORDER_COMPLETED + finishOrderSummary());
 
             btnAddProduct.setEnabled(false);
             btnAddService.setEnabled(false);
